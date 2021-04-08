@@ -102,14 +102,13 @@ public class ServerHandler extends Thread {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream())); 
             
             gui.setOutputStream(out);
-            gui.setTitle("Server: Channel " + channel);
+            gui.setTitle("Server@" + port + ": Channel " + channel);
             while(true) {
                 message = in.readLine();
-                gui.addToScreen(socket.getRemoteSocketAddress() + ": " + message, true);
+                gui.addToScreen("peer@" + socket.getPort() + ": " + message, true);
                 if (message.startsWith("!")) {
                     String response = commandHandler(message);
                     if (response.startsWith("file-") && !response.equals("file-")) {
-                        System.out.println("ABOUT TO SEND");
                         FileInputStream fis = new FileInputStream(response.replace("file-", ""));
                         sendBytes(fis, out, new File(response.replace("file-", "")));
                     } else {

@@ -1,14 +1,10 @@
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
 
 
 public class ClientHandler extends Thread {
-    private final static String CRLF = "\r\n";
     private GUI gui;
     private int port;
 
@@ -33,7 +29,7 @@ public class ClientHandler extends Thread {
         DataInputStream in = new DataInputStream(socket.getInputStream());
         
         gui.setOutputStream(out);
-        gui.setTitle("P2P APP @ " + port);
+        gui.setTitle("P2P APP to " + port);
 
 
         String message = "";
@@ -43,14 +39,11 @@ public class ClientHandler extends Thread {
             //     System.out.println("file seen");
             //     receiveFile(gui.getRequestedFile(), in);
             //     gui.resetHasIncomingFile();
-            // } else if((message = in.readLine()) != null && !message.isEmpty()) {
-            //     gui.addToScreen(socket.getRemoteSocketAddress() + ": " + message, true); 
-            // }
+            // } else 
+            if((message = in.readLine()) != null && !message.isEmpty()) {
+                gui.addToScreen("peer@" + port + ": " + message, true); 
+            }
         }
-
-        // socket.close();
-        // out.close();
-        // in.close();
     }
 
     public static void receiveFile(String fileName, DataInputStream in, long size) throws Exception {
