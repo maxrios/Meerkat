@@ -1,5 +1,7 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.DataOutputStream;
 
 import javax.swing.*;
@@ -35,15 +37,30 @@ public class GUI {
 
         textField = new JTextField(25);
         inputPanel.add(textField);
-
         JButton button = new JButton("Send");
+        inputPanel.add(button);
+
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent a) {
                 transmitMessage(textField.getText());                     
             } 
         });
-        inputPanel.add(button);
+
+        textField.addKeyListener(new KeyListener(){
+            @Override
+            public void keyPressed(KeyEvent arg0) {
+                if (arg0.getKeyCode()==KeyEvent.VK_ENTER) {
+                    transmitMessage(textField.getText());   
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent arg0) {}
+
+            @Override
+            public void keyTyped(KeyEvent arg0) {}
+        });
         
 
         frame.pack();
@@ -75,7 +92,7 @@ public class GUI {
 
     private void transmitMessage(String message) {
         try {
-            if (message.trim().startsWith("!files") && !message.trim().equals("!files")) {
+            if (message.trim().toLowerCase().startsWith("!download")) {
                 String fileName = message.split(" ")[1];
                 requestedFile = fileName;
             } 

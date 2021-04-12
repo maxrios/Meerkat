@@ -8,6 +8,13 @@ $ java Peer <your-port> <optional-connect-to-port>
 ```
 - To only run as a server, only enter your port. To connect to another peer, enter another active port to establish a TCP connection.
 
+## Chat Commands
+```
+!files                  : requests all available files from connected peer's public library. 
+!download <file-name>   : downloads a file from the connected peer's public library.
+
+```
+
 ## Development Notes
 1. Server loads up with given port.
 2. Client loads up and requests other peer's port.

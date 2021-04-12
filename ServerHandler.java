@@ -1,15 +1,11 @@
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -105,7 +101,6 @@ public class ServerHandler extends Thread {
             gui.setTitle("Server@" + port + ": Channel " + channel);
             while(true) {
                 message = in.readLine();
-                gui.addToScreen("peer@" + socket.getPort() + ": " + message, true);
                 if (message.startsWith("!")) {
                     String response = commandHandler(message);
                     if (response.startsWith("file-") && !response.equals("file-")) {
@@ -115,22 +110,23 @@ public class ServerHandler extends Thread {
                         out.writeBytes(response + CRLF);
                     }
                 } else {
+                    gui.addToScreen("peer@" + socket.getPort() + ": " + message, true);
                     out.writeBytes("" + CRLF);
                 }
             }
         }
 
         private String commandHandler(String command) {
-            if (command.trim().equals("!files")) {
+            if (command.trim().toLowerCase().startsWith("!files")) {
                 updateLibrary();
                 String[] names = new String[library.size()];
                 for (int i = 0; i < names.length; i++) {
                     names[i] = library.get(i).getName();
                 }
-                System.out.println("Files requested...");
+                System.out.println("File list requested...");
                 
                 return Arrays.toString(names);
-            } else if (command.contains("!files")) {
+            } else if (command.trim().toLowerCase().startsWith("!download")) {
                 updateLibrary();
                 String[] parts = command.split(" ");
                 String[] tempVal = {""};
@@ -140,6 +136,7 @@ public class ServerHandler extends Thread {
                     }
                 });
                 
+                System.out.println("Sending file '" + parts[1] +"' to peer @ " + socket.getPort() + "...");
                 return "file-" + tempVal[0];
             }
 
@@ -149,7 +146,8 @@ public class ServerHandler extends Thread {
 
     private static void sendBytes(FileInputStream fis, DataOutputStream os, File file) throws Exception {
         int bytes = 0;
-        
+        os.writeBytes("DtBndYLRcA" + CRLF);
+
         // send file size
         os.writeLong(file.length());  
         // break file into chunks
@@ -157,7 +155,6 @@ public class ServerHandler extends Thread {
         while ((bytes=fis.read(buffer))!=-1){
             os.write(buffer,0,bytes);
             os.flush();
-            // System.out.println("SENDING");
         }
     }
 }

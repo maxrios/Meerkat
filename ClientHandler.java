@@ -7,6 +7,7 @@ import java.net.Socket;
 public class ClientHandler extends Thread {
     private GUI gui;
     private int port;
+    private final String FILE_FLAG = "DtBndYLRcA";
 
     public ClientHandler(GUI gui, int port) {
         this.gui = gui;
@@ -35,21 +36,21 @@ public class ClientHandler extends Thread {
         String message = "";
         while(true) {
             
-            // if (gui.hasIncomingFile()) {
-            //     System.out.println("file seen");
-            //     receiveFile(gui.getRequestedFile(), in);
-            //     gui.resetHasIncomingFile();
-            // } else 
             if((message = in.readLine()) != null && !message.isEmpty()) {
-                gui.addToScreen("peer@" + port + ": " + message, true); 
+                if (message.equals(FILE_FLAG)) {
+                    receiveFile(gui.getRequestedFile(), in);
+                } else {
+                    gui.addToScreen("peer@" + port + ": " + message, true);
+                } 
             }
         }
     }
 
-    public static void receiveFile(String fileName, DataInputStream in, long size) throws Exception {
+    public static void receiveFile(String fileName, DataInputStream in) throws Exception {
         int bytes = 0;
         FileOutputStream fileOutputStream = new FileOutputStream("./downloads/" + fileName);
 
+        long size = in.readLong();
         byte[] buffer = new byte[4*1024];
         while (size > 0 && (bytes = in.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
             fileOutputStream.write(buffer,0,bytes);
