@@ -3,6 +3,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.DataOutputStream;
+import java.awt.Color;
 
 import javax.swing.*;
 
@@ -113,5 +114,9 @@ public class GUI {
 
     public boolean hasIncomingFile() {
         return hasIncomingFile;
+    }
+
+    public void setChatColor(int colorCode) {
+        textArea.setForeground(new Color(colorCode));
     }
 }

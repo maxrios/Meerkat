@@ -32,6 +32,10 @@ public class ClientHandler extends Thread {
         gui.setOutputStream(out);
         gui.setTitle("P2P APP to " + port);
 
+        // Receive chat color code
+        String color = in.readLine();
+        int colorCode = Integer.parseInt(color);
+        gui.setChatColor(colorCode);
 
         String message = "";
         while(true) {

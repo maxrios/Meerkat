@@ -99,6 +99,11 @@ public class ServerHandler extends Thread {
             
             gui.setOutputStream(out);
             gui.setTitle("Server@" + port + ": Channel " + channel);
+
+            int colorCode = (int)(Math.random() * 0x1000000);
+            out.writeBytes(Integer.toString(colorCode) + CRLF);
+            gui.setChatColor(colorCode);
+
             while(true) {
                 message = in.readLine();
                 if (message.startsWith("!")) {
