@@ -1,5 +1,5 @@
-# Peer-to-Peer File Sharing
-Peer-to-peer file sharing applications supporting chat functionality over a TCP/IP connection on a localhost. 
+# Meerkat
+A peer-to-peer file sharing applications supporting chat functionality over a TCP/IP connection on a localhost. 
 
 ## Build
 ```
